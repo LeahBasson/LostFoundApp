@@ -1,0 +1,77 @@
+package za.ac.cput.lostfoundapp;
+
+import java.awt.*;
+import javax.swing.*;
+
+public class EditProfileDialog extends JDialog {
+
+    public EditProfileDialog() {
+
+        setTitle("Edit Profile");
+        setSize(500, 400);
+        setLocationRelativeTo(null);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(8, 2, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel lblName = new JLabel("Full Name:");
+        JTextField txtName = new JTextField();
+
+        JLabel lblContact = new JLabel("Contact Number:");
+        JTextField txtContact = new JTextField();
+
+        JLabel lblCampus = new JLabel("Campus:");
+        JTextField txtCampus = new JTextField();
+
+        JLabel lblLanguage = new JLabel("Language:");
+        JTextField txtLanguage = new JTextField();
+
+        JLabel lblEmail = new JLabel("Email Address:");
+        JTextField txtEmail = new JTextField();
+        
+        JLabel lblStudNum = new JLabel("Student number:");
+        JTextField txtStudNum = new JTextField();
+        
+        JLabel lblRole = new JLabel("Role:");
+        JTextField txtRole = new JTextField();
+
+        JButton btnUpdate = new JButton("Update");
+        JButton btnExit = new JButton("Exit");
+
+        panel.add(lblName);
+        panel.add(txtName);
+
+        panel.add(lblContact);
+        panel.add(txtContact);
+        
+        panel.add(lblCampus);
+        panel.add(txtCampus);
+        
+        panel.add(lblLanguage);
+        panel.add(txtLanguage);
+        
+        panel.add(lblEmail);
+        panel.add(txtEmail);
+        
+        panel.add(lblStudNum);
+        panel.add(txtStudNum);
+        
+        panel.add(lblRole);
+        panel.add(txtRole);
+
+        panel.add(btnExit);
+        panel.add(btnUpdate);
+
+        add(panel);
+
+        btnExit.addActionListener(e -> {
+            dispose();
+        });
+
+        btnUpdate.addActionListener(e -> {
+
+            dispose();
+        });
+    }
+}
