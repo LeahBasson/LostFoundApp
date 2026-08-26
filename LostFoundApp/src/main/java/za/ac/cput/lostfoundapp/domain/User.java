@@ -10,20 +10,16 @@ public class User {
     private String contact_number;
     private String role;
     private String password_hash;
-    private boolean is_active;
     private String language;
 
-    public User(int user_id, String student_staff_number, String email, String full_name, String campus, String contact_number, String role, String password_hash, boolean is_active, String language) {
-        this.user_id = user_id;
-        this.student_staff_number = student_staff_number;
-        this.email = email;
+    public User(String full_name, String contact_number, String campus, String language, String email, String student_staff_number, String role){
         this.full_name = full_name;
-        this.campus = campus;
         this.contact_number = contact_number;
-        this.role = role;
-        this.password_hash = password_hash;
-        this.is_active = is_active;
+        this.campus = campus;
         this.language = language;
+        this.email = email;
+        this.student_staff_number = student_staff_number;
+        this.role = role;
     }
 
     public int getUser_id() {
@@ -88,14 +84,6 @@ public class User {
 
     public void setPassword_hash(String password_hash) {
         this.password_hash = password_hash;
-    }
-
-    public boolean isIs_active() {
-        return is_active;
-    }
-
-    public void setIs_active(boolean is_active) {
-        this.is_active = is_active;
     }
 
     public String getLanguage() {

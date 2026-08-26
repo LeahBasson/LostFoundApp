@@ -1,5 +1,6 @@
 package za.ac.cput.lostfoundapp;
 
+import za.ac.cput.lostfoundapp.gui.LoginFrame;
 import javax.swing.SwingUtilities;
 
 /**

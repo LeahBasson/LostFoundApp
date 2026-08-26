@@ -1,5 +1,6 @@
-package za.ac.cput.lostfoundapp;
+package za.ac.cput.lostfoundapp.gui;
 
+import za.ac.cput.lostfoundapp.gui.EditProfileDialog;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
