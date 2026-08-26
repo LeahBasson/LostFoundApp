@@ -1,4 +1,4 @@
-package za.ac.cput.lostfoundapp;
+package za.ac.cput.lostfoundapp.gui;
 
 import javax.swing.*;
 import java.awt.*;
