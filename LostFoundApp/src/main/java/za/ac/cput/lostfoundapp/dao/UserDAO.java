@@ -59,18 +59,18 @@ public class UserDAO {
         return false; // email doesn't exist
     }
 
-    public ArrayList<User> selectUser(String emailAddress) { 
+    public ArrayList<User> selectUser(String emailAddress) {
         ArrayList<User> users = new ArrayList<>();
 
         try {
             pstmt = this.con.prepareStatement("SELECT full_name, contact_number, campus, "
                     + "language, email, student_staff_number, role FROM Users WHERE email = ?");
-            
+
             pstmt.setString(1, emailAddress);
-            
+
             ResultSet rs = pstmt.executeQuery();
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 String full_name = rs.getString("full_name");
                 String contact_number = rs.getString("contact_number");
                 String campus = rs.getString("campus");
@@ -78,18 +78,35 @@ public class UserDAO {
                 String email = rs.getString("email");
                 String student_staff_number = rs.getString("student_staff_number");
                 String role = rs.getString("role");
-                
+
                 User user = new User(full_name, contact_number, campus, language, email, student_staff_number, role);
-                
+
                 users.add(user);
             }
-            
+
         } catch (SQLException err) {
             System.out.println("ERROR: " + err);
         }
         return users;
     }
-    
-    
+
+    public void updateUser(String student_staff_number, String full_name, String contact_number, String language, String email) {
+        try {
+            pstmt = this.con.prepareStatement("UPDATE Users SET full_name = ?, contact_number = ?, language = ?,"
+                    + "email = ? WHERE student_staff_number = ?");
+
+            pstmt.setString(1, full_name);
+            pstmt.setString(2, contact_number);
+            pstmt.setString(3, language);
+            pstmt.setString(4, email);
+            pstmt.setString(5, student_staff_number);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException err) {
+            System.out.println("ERROR: " + err);
+        }
+
+    }
 
 }// end of class
