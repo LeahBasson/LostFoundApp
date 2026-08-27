@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.table.DefaultTableModel;
+import za.ac.cput.lostfoundapp.domain.*;
 
 public class DashboardPanel extends JPanel {
 
@@ -20,8 +21,12 @@ public class DashboardPanel extends JPanel {
     private JPanel pnlRecentActivity;
     private JPanel pnlAchievements;
     private JPanel pnlBadges;
+    
+    // object
+    private User loggedInUser;
 
-    public DashboardPanel() {
+    public DashboardPanel(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
 
         setLayout(new BorderLayout());
         setBackground(new Color(248, 250, 252));
@@ -47,7 +52,7 @@ public class DashboardPanel extends JPanel {
 
         JLabel title = new JLabel("Dashboard");
         title.setFont(new Font("SansSerif", Font.BOLD, 24));
-        JLabel sub = new JLabel("Welcome back, Thabo Molefe - Belleville Campus");
+        JLabel sub = new JLabel("Welcome back, " + loggedInUser.getFull_name() + " - " + loggedInUser.getCampus());
         sub.setForeground(Color.GRAY);
 
         JPanel tPanel = new JPanel(new GridLayout(2, 1));
