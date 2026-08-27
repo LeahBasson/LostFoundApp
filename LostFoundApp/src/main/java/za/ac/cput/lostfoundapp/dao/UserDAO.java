@@ -40,8 +40,10 @@ public class UserDAO {
             System.out.println("ERROR: " + err);
         }
     }
-
-    public boolean emailCheck(String email) { // register: check if users email doesn't already exist OR login: check if users email exists
+    
+    public boolean emailCheck(String email) { 
+    // register: check if users email doesn't already exist
+    // login: check if users email exists
         try {
             pstmt = this.con.prepareStatement("SELECT email FROM Users WHERE email = ?");
 
@@ -57,6 +59,26 @@ public class UserDAO {
             System.out.println("ERROR: " + err);
         }
         return false; // email doesn't exist
+    }
+
+    public boolean loginCheck(String email, String password_hash) { 
+    //  checks the correct password for that email.
+        try {
+            pstmt = this.con.prepareStatement("SELECT * FROM Users WHERE email = ? AND password_hash = ?");
+
+            pstmt.setString(1, email);
+            pstmt.setString(2, password_hash);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return true; 
+            }
+
+        } catch (SQLException err) {
+            System.out.println("ERROR: " + err);
+        }
+        return false; 
     }
 
     public ArrayList<User> selectUser(String emailAddress) {

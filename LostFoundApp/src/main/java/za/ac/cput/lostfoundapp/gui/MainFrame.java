@@ -3,13 +3,16 @@ package za.ac.cput.lostfoundapp.gui;
 import za.ac.cput.lostfoundapp.gui.DashboardPanel;
 import javax.swing.*;
 import java.awt.*;
+import za.ac.cput.lostfoundapp.domain.*;
 
 public class MainFrame extends JFrame {
 
     private JPanel contentPanel;
     private CardLayout cardLayout;
+    private User loggedInUser;
 
-    public MainFrame() {
+    public MainFrame(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
         setTitle("FindMyItem - CPUT Lost & Found | Your Student Nr - Your Name");
         setSize(1150, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,7 +31,7 @@ public class MainFrame extends JFrame {
         logo.setForeground(Color.WHITE);
         logo.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
 
-        JLabel userLabel = new JLabel("  Your Name");
+        JLabel userLabel = new JLabel("   " + loggedInUser.getFull_name());
         userLabel.setForeground(new Color(148, 163, 184));
         userLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 10));
 
