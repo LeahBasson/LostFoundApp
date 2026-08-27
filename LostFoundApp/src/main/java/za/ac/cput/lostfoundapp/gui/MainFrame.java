@@ -1,6 +1,5 @@
 package za.ac.cput.lostfoundapp.gui;
 
-import za.ac.cput.lostfoundapp.gui.DashboardPanel;
 import javax.swing.*;
 import java.awt.*;
 import za.ac.cput.lostfoundapp.domain.*;
@@ -13,7 +12,8 @@ public class MainFrame extends JFrame {
 
     public MainFrame(User loggedInUser) {
         this.loggedInUser = loggedInUser;
-        setTitle("FindMyItem - CPUT Lost & Found | Your Student Nr - Your Name");
+        setTitle("FindMyItem - CPUT Lost & Found | " + loggedInUser.getStudent_staff_number() + " - "
+                + loggedInUser.getFull_name());
         setSize(1150, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -55,7 +55,7 @@ public class MainFrame extends JFrame {
 
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
-        contentPanel.add(new DashboardPanel(), "Dashboard");
+        contentPanel.add(new DashboardPanel(loggedInUser), "Dashboard");
         contentPanel.add(new ReportItemPanel("LOST"), "Report Lost Item");
         contentPanel.add(new ReportItemPanel("FOUND"), "Report Found Item");
         contentPanel.add(new MyItemsPanel(), "My Items");
