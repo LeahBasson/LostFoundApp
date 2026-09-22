@@ -12,7 +12,8 @@ public class User {
     private String password_hash;
     private String language;
 
-    public User(String full_name, String contact_number, String campus, String language, String email, String student_staff_number, String role){
+    public User(int user_id, String full_name, String contact_number, String campus, String language, String email, String student_staff_number, String role){
+        this.user_id = user_id;
         this.full_name = full_name;
         this.contact_number = contact_number;
         this.campus = campus;
