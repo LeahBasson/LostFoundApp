@@ -85,7 +85,7 @@ public class UserDAO {
         ArrayList<User> users = new ArrayList<>();
 
         try {
-            pstmt = this.con.prepareStatement("SELECT full_name, contact_number, campus, "
+            pstmt = this.con.prepareStatement("SELECT user_id, full_name, contact_number, campus, "
                     + "language, email, student_staff_number, role FROM Users WHERE email = ?");
 
             pstmt.setString(1, emailAddress);
@@ -93,6 +93,7 @@ public class UserDAO {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
+                int user_id = rs.getInt("user_id");
                 String full_name = rs.getString("full_name");
                 String contact_number = rs.getString("contact_number");
                 String campus = rs.getString("campus");
@@ -101,7 +102,7 @@ public class UserDAO {
                 String student_staff_number = rs.getString("student_staff_number");
                 String role = rs.getString("role");
 
-                User user = new User(full_name, contact_number, campus, language, email, student_staff_number, role);
+                User user = new User(user_id, full_name, contact_number, campus, language, email, student_staff_number, role);
 
                 users.add(user);
             }

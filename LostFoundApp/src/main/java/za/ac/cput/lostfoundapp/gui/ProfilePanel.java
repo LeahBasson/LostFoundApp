@@ -6,6 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
+import za.ac.cput.lostfoundapp.domain.User;
 
 public class ProfilePanel extends JPanel implements ActionListener {
 
@@ -40,8 +41,13 @@ public class ProfilePanel extends JPanel implements ActionListener {
 
     // button
     private JButton btnEdit;
+    
+    // object
+    private User loggedInUser;
 
-    public ProfilePanel() {
+    public ProfilePanel(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+        
         setLayout(new BorderLayout());
 
         // panels
@@ -125,11 +131,11 @@ public class ProfilePanel extends JPanel implements ActionListener {
         lblTitle.setFont(new Font("SansSerif", Font.BOLD, 24));
         lblSub = new JLabel("Manage your account details and view your community contributions");
         lblSub.setForeground(Color.GRAY);
-        lblOverviewName = new JLabel("Thabo Molefe");
+        lblOverviewName = new JLabel(loggedInUser.getFull_name());
         lblOverviewName.setFont(new Font("SansSerif", Font.BOLD, 18));
         lblOverviewName.setForeground(Color.WHITE);
-        lblSummary = new JLabel("Student  •  Beville Campus  •  850 Points");
-        lblSummary.setForeground(Color.WHITE);
+        lblSummary = new JLabel(loggedInUser.getRole() + " • " + loggedInUser.getCampus() +  "•  850 Points");
+        lblSummary.setForeground(Color.WHITE); 
         lblOverviewName.setAlignmentX(Component.LEFT_ALIGNMENT);
         lblSummary.setAlignmentX(Component.LEFT_ALIGNMENT);
 

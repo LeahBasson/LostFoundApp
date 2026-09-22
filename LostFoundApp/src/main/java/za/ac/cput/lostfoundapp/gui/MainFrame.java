@@ -61,7 +61,7 @@ public class MainFrame extends JFrame {
         contentPanel.add(new MyItemsPanel(), "My Items");
         contentPanel.add(new SimplePanel("My Claims Module - Claim ownership of items"), "My Claims");
         contentPanel.add(new SimplePanel("Messages Module - Secure chat"), "Messages");
-        contentPanel.add(new ProfilePanel(), "Profile");
+        contentPanel.add(new ProfilePanel(loggedInUser), "Profile");
 
         btnDashboard.addActionListener(e -> cardLayout.show(contentPanel, "Dashboard"));
         btnReportLost.addActionListener(e -> cardLayout.show(contentPanel, "Report Lost Item"));

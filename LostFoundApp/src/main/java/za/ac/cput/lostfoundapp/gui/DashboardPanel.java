@@ -18,9 +18,10 @@ public class DashboardPanel extends JPanel {
     private JPanel pnlHeader;
     private JPanel pnlStats;
     private JPanel pnlReport;
-    private JPanel pnlRecentActivity;
+    private JPanel pnlRecentActivityHeader;
     private JPanel pnlAchievements;
     private JPanel pnlBadges;
+    private JPanel pnlTable;
     
     // object
     private User loggedInUser;
@@ -84,21 +85,27 @@ public class DashboardPanel extends JPanel {
             frame.showPanel("Report Found Item");
         }));
 
-        pnlRecentActivity = new JPanel(new GridLayout(1, 1, 15, 15));
-        pnlRecentActivity.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        pnlRecentActivity.setOpaque(false);
+        pnlRecentActivityHeader = new JPanel(new GridLayout(1, 1, 15, 15));
+        pnlRecentActivityHeader.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        pnlRecentActivityHeader.setOpaque(false);
         JLabel lblRecent = new JLabel("Recent Activity");
         lblRecent.setFont(new Font("SansSerif", Font.BOLD, 16));
-        pnlRecentActivity.add(lblRecent);
+        pnlRecentActivityHeader.add(lblRecent);
 
         // table
+        pnlTable = new JPanel();
+        pnlTable.setLayout(new BorderLayout());
+        pnlTable.setBorder(BorderFactory.createEmptyBorder(0,20, 0, 20));
+        pnlTable.setOpaque(false);
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
 
         setGui();
 
         JScrollPane tableScrollPane = new JScrollPane(table);
-        tableScrollPane.setPreferredSize(new Dimension(870, 200));
+        tableScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+ 
+        pnlTable.add(new JScrollPane(tableScrollPane), BorderLayout.CENTER);
 
         // achievements panel
         pnlAchievements = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -127,13 +134,11 @@ public class DashboardPanel extends JPanel {
 
         gbc.gridy = 3;
         gbc.insets = new Insets(0, 0, 18, 0);
-        pnlContainer.add(pnlRecentActivity, gbc);
+        pnlContainer.add(pnlRecentActivityHeader, gbc);
 
         gbc.gridy = 4;
         gbc.insets = new Insets(2, 0, 0, 0);
-        gbc.fill = GridBagConstraints.NONE; // dont stretch the table
-        gbc.weightx = 0; // don't give the table the extra horizontal space.
-        pnlContainer.add(tableScrollPane, gbc);
+        pnlContainer.add(pnlTable, gbc);
 
         gbc.gridy = 5;
         gbc.insets = new Insets(15, 16, 0, 20);
