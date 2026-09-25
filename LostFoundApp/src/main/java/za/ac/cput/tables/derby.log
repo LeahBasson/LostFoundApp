@@ -1,0 +1,14 @@
+Fri Sep 25 22:18:03 SAST 2026 : Apache Derby Network Server - 10.14.2.0 - (1828579) started and ready to accept connections on port 1527
+----------------------------------------------------------------
+Fri Sep 25 22:18:08 SAST 2026:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-01a0-da37-c310-00007888cc28 
+on database directory C:\Users\Bibi\Documents\LostFoundApp\LostFoundApp\src\main\java\za\ac\cput\tables\LostAndFoundAppi with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@70dea4e 
+Loaded from file:/C:/Program%20Files/Java/jdk-23/Db/db-derby-10.14.2.0-bin/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=23.0.2+7-58
+user.dir=C:\Program Files\Java\jdk-23\Db\db-derby-10.14.2.0-bin
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=C:\Users\Bibi\Documents\LostFoundApp\LostFoundApp\src\main\java\za\ac\cput\tables
+Database Class Loader started - derby.database.classpath=''

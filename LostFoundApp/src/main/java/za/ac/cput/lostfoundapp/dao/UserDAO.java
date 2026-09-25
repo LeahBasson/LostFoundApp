@@ -19,11 +19,16 @@ public class UserDAO {
         }
     }
 
-    public void register(User user) { // add a user
+    public void register(User user) {
+
         try {
-            pstmt = this.con.prepareStatement("INSERT INTO Users (student_staff_number, email, "
-                    + "full_name, campus, contact_number, role, password_hash, language) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
+            pstmt = this.con.prepareStatement(
+                    "INSERT INTO Users "
+                    + "(student_staff_number, email, full_name, campus, "
+                    + "contact_number, role, password_hash, language) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            );
 
             pstmt.setString(1, user.getStudent_staff_number());
             pstmt.setString(2, user.getEmail());
@@ -37,34 +42,43 @@ public class UserDAO {
             pstmt.executeUpdate();
 
         } catch (SQLException err) {
+
             System.out.println("ERROR: " + err);
         }
     }
-    
-    public boolean emailCheck(String email) { 
-    // register: check if users email doesn't already exist
-    // login: check if users email exists
+
+    public boolean emailCheck(String email) {
+
         try {
-            pstmt = this.con.prepareStatement("SELECT email FROM Users WHERE email = ?");
+
+            pstmt = this.con.prepareStatement(
+                    "SELECT email FROM Users WHERE email = ?"
+            );
 
             pstmt.setString(1, email);
 
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                return true; // email exists
+                return true;
             }
 
         } catch (SQLException err) {
+
             System.out.println("ERROR: " + err);
         }
-        return false; // email doesn't exist
+
+        return false;
     }
 
-    public boolean loginCheck(String email, String password_hash) { 
-    //  checks the correct password for that email.
+    public boolean loginCheck(String email, String password_hash) {
+
         try {
-            pstmt = this.con.prepareStatement("SELECT * FROM Users WHERE email = ? AND password_hash = ?");
+
+            pstmt = this.con.prepareStatement(
+                    "SELECT * FROM Users "
+                    + "WHERE email = ? AND password_hash = ?"
+            );
 
             pstmt.setString(1, email);
             pstmt.setString(2, password_hash);
@@ -72,51 +86,101 @@ public class UserDAO {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                return true; 
+                return true;
             }
 
         } catch (SQLException err) {
+
             System.out.println("ERROR: " + err);
         }
-        return false; 
+
+        return false;
     }
 
     public ArrayList<User> selectUser(String emailAddress) {
+
         ArrayList<User> users = new ArrayList<>();
 
         try {
-            pstmt = this.con.prepareStatement("SELECT user_id, full_name, contact_number, campus, "
-                    + "language, email, student_staff_number, role FROM Users WHERE email = ?");
+
+            pstmt = this.con.prepareStatement(
+                    "SELECT user_id, full_name, contact_number, campus, "
+                    + "language, email, student_staff_number, role, "
+                    + "password_hash "
+                    + "FROM Users WHERE email = ?"
+            );
 
             pstmt.setString(1, emailAddress);
 
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                int user_id = rs.getInt("user_id");
-                String full_name = rs.getString("full_name");
-                String contact_number = rs.getString("contact_number");
-                String campus = rs.getString("campus");
-                String language = rs.getString("language");
-                String email = rs.getString("email");
-                String student_staff_number = rs.getString("student_staff_number");
-                String role = rs.getString("role");
 
-                User user = new User(user_id, full_name, contact_number, campus, language, email, student_staff_number, role);
+                int user_id = rs.getInt("user_id");
+
+                String full_name =
+                        rs.getString("full_name");
+
+                String contact_number =
+                        rs.getString("contact_number");
+
+                String campus =
+                        rs.getString("campus");
+
+                String language =
+                        rs.getString("language");
+
+                String email =
+                        rs.getString("email");
+
+                String student_staff_number =
+                        rs.getString("student_staff_number");
+
+                String role =
+                        rs.getString("role");
+
+                String password_hash =
+                        rs.getString("password_hash");
+
+                User user = new User(
+                        user_id,
+                        full_name,
+                        contact_number,
+                        campus,
+                        language,
+                        email,
+                        student_staff_number,
+                        role
+                );
+
+                user.setPassword_hash(password_hash);
 
                 users.add(user);
             }
 
         } catch (SQLException err) {
+
             System.out.println("ERROR: " + err);
         }
+
         return users;
     }
 
-    public void updateUser(String student_staff_number, String full_name, String contact_number, String language, String email) {
+    public void updateUser(
+            String student_staff_number,
+            String full_name,
+            String contact_number,
+            String language,
+            String email) {
+
         try {
-            pstmt = this.con.prepareStatement("UPDATE Users SET full_name = ?, contact_number = ?, language = ?,"
-                    + "email = ? WHERE student_staff_number = ?");
+
+            pstmt = this.con.prepareStatement(
+                    "UPDATE Users SET full_name = ?, "
+                    + "contact_number = ?, language = ?, "
+                    + "email = ? "
+                    + "WHERE student_staff_number = ?"
+            );
 
             pstmt.setString(1, full_name);
             pstmt.setString(2, contact_number);
@@ -127,9 +191,8 @@ public class UserDAO {
             pstmt.executeUpdate();
 
         } catch (SQLException err) {
+
             System.out.println("ERROR: " + err);
         }
-
     }
-
-}// end of class
+}
