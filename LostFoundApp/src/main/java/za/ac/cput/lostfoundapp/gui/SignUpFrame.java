@@ -279,7 +279,7 @@ public class SignUpFrame extends JFrame {
                             language,
                             email,
                             studentStaffNumber,
-                            role);
+                            role, password);
 
                     userDAO.register(user);
 

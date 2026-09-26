@@ -12,7 +12,7 @@ public class User {
     private String password_hash;
     private String language;
 
-    public User(int user_id, String full_name, String contact_number, String campus, String language, String email, String student_staff_number, String role){
+    public User(int user_id, String full_name, String contact_number, String campus, String language, String email, String student_staff_number, String role, String password_hash){
         this.user_id = user_id;
         this.full_name = full_name;
         this.contact_number = contact_number;
@@ -21,6 +21,7 @@ public class User {
         this.email = email;
         this.student_staff_number = student_staff_number;
         this.role = role;
+        this.password_hash = password_hash;
     }
 
     public int getUser_id() {

@@ -41,13 +41,13 @@ public class ProfilePanel extends JPanel implements ActionListener {
 
     // button
     private JButton btnEdit;
-    
+
     // object
     private User loggedInUser;
 
     public ProfilePanel(User loggedInUser) {
         this.loggedInUser = loggedInUser;
-        
+
         setLayout(new BorderLayout());
 
         // panels
@@ -134,8 +134,8 @@ public class ProfilePanel extends JPanel implements ActionListener {
         lblOverviewName = new JLabel(loggedInUser.getFull_name());
         lblOverviewName.setFont(new Font("SansSerif", Font.BOLD, 18));
         lblOverviewName.setForeground(Color.WHITE);
-        lblSummary = new JLabel(loggedInUser.getRole() + " • " + loggedInUser.getCampus() +  "•  850 Points");
-        lblSummary.setForeground(Color.WHITE); 
+        lblSummary = new JLabel(loggedInUser.getRole() + " • " + loggedInUser.getCampus() + "•  850 Points");
+        lblSummary.setForeground(Color.WHITE);
         lblOverviewName.setAlignmentX(Component.LEFT_ALIGNMENT);
         lblSummary.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -197,6 +197,7 @@ public class ProfilePanel extends JPanel implements ActionListener {
 
         pnlAccInfoHeader.add(lblAccInfo);
         pnlAccInfo.add(new JScrollPane(table), BorderLayout.CENTER);
+        pnlAccInfo.setPreferredSize(new Dimension(500, 38));
 
         pnlEdit.add(btnEdit);
 
@@ -336,11 +337,21 @@ public class ProfilePanel extends JPanel implements ActionListener {
         tableModel.addColumn("Email Address");
         tableModel.addColumn("Student Number");
         tableModel.addColumn("Role");
+
+        tableModel.addRow(new Object[]{
+            loggedInUser.getFull_name(),
+            loggedInUser.getContact_number(),
+            loggedInUser.getCampus(),
+            loggedInUser.getLanguage(),
+            loggedInUser.getEmail(),
+            loggedInUser.getStudent_staff_number(),
+            loggedInUser.getRole()
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        EditProfileDialog dialog = new EditProfileDialog();
+        EditProfileDialog dialog = new EditProfileDialog(loggedInUser);
 
         dialog.setVisible(true);
     }
