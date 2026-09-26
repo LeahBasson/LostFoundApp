@@ -117,53 +117,26 @@ public class UserDAO {
             while (rs.next()) {
 
                 int user_id = rs.getInt("user_id");
+                String full_name = rs.getString("full_name");
+                String contact_number = rs.getString("contact_number");
+                String campus = rs.getString("campus");
+                String language = rs.getString("language");
+                String email = rs.getString("email");
+                String student_staff_number = rs.getString("student_staff_number");
+                String role = rs.getString("role");
+                String password_hash = rs.getString("password_hash");
 
-                String full_name =
-                        rs.getString("full_name");
-
-                String contact_number =
-                        rs.getString("contact_number");
-
-                String campus =
-                        rs.getString("campus");
-
-                String language =
-                        rs.getString("language");
-
-                String email =
-                        rs.getString("email");
-
-                String student_staff_number =
-                        rs.getString("student_staff_number");
-
-                String role =
-                        rs.getString("role");
-
-                String password_hash =
-                        rs.getString("password_hash");
-
-                User user = new User(
-                        user_id,
-                        full_name,
-                        contact_number,
-                        campus,
-                        language,
-                        email,
-                        student_staff_number,
-                        role,
-                        password_hash
+                User user = new User(user_id, full_name, contact_number, campus, language,
+                        email, student_staff_number, role, password_hash
                 );
 
                 user.setPassword_hash(password_hash);
-
                 users.add(user);
             }
 
         } catch (SQLException err) {
-
             System.out.println("ERROR: " + err);
         }
-
         return users;
     }
 
@@ -183,7 +156,7 @@ public class UserDAO {
         }
 
     }
-    
+
     public void updatePassword(String student_staff_number, String password_hash) {
         try {
             pstmt = this.con.prepareStatement("UPDATE Users SET password_hash = ?"
@@ -199,5 +172,5 @@ public class UserDAO {
         }
 
     }
-    
+
 }// end of class
