@@ -1,11 +1,12 @@
 package za.ac.cput.lostfoundapp.gui;
 
+import za.ac.cput.lostfoundapp.dao.UserDAO;
+import za.ac.cput.lostfoundapp.domain.User;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import za.ac.cput.lostfoundapp.dao.*;
-import za.ac.cput.lostfoundapp.domain.*;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class LoginFrame extends JFrame implements ActionListener {
 
@@ -78,7 +79,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         gbc.gridy++;
         gbc.gridwidth = 2;
 
-        btnLogin = new JButton("Login with CPUT Email + OTP");
+        btnLogin = new JButton("Login with CPUT Email");
         btnLogin.setBackground(new Color(37, 99, 235));
         btnLogin.setForeground(Color.WHITE);
         btnLogin.setFocusPainted(false);
@@ -97,6 +98,13 @@ public class LoginFrame extends JFrame implements ActionListener {
         p.add(btnSignUp, gbc);
 
         gbc.gridy++;
+        
+        JLabel lblForgotPwd = new JLabel("Forgot password?", SwingConstants.CENTER);
+        lblForgotPwd.setForeground(new Color(37, 99, 235));
+        lblForgotPwd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
+        
+        p.add(lblForgotPwd, gbc);  
+        gbc.gridy++;
 
         JLabel note = new JLabel(
                 "Demo: Click login to enter main app",
@@ -113,6 +121,15 @@ public class LoginFrame extends JFrame implements ActionListener {
             new SignUpFrame().setVisible(true);
             dispose();
         });
+        
+        lblForgotPwd.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new ForgotPassword().setVisible(true);
+                dispose();
+            }
+        });
+
 
         add(p);
     }
@@ -155,4 +172,6 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         }
     }
-}
+
+    
+}// end of class

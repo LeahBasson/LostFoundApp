@@ -1,10 +1,13 @@
 package za.ac.cput.lostfoundapp.gui;
 
+import za.ac.cput.lostfoundapp.domain.User;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.table.DefaultTableModel;
-import za.ac.cput.lostfoundapp.domain.*;
+import za.ac.cput.lostfoundapp.dao.AchievementDAO;
+import za.ac.cput.lostfoundapp.domain.Achievement;
+import java.util.ArrayList;
 
 public class DashboardPanel extends JPanel {
 
@@ -22,12 +25,14 @@ public class DashboardPanel extends JPanel {
     private JPanel pnlAchievements;
     private JPanel pnlBadges;
     private JPanel pnlTable;
-    
+
     // object
     private User loggedInUser;
+    private AchievementDAO achievementDB;
 
     public DashboardPanel(User loggedInUser) {
         this.loggedInUser = loggedInUser;
+        achievementDB = new AchievementDAO();
 
         setLayout(new BorderLayout());
         setBackground(new Color(248, 250, 252));
@@ -95,7 +100,7 @@ public class DashboardPanel extends JPanel {
         // table
         pnlTable = new JPanel();
         pnlTable.setLayout(new BorderLayout());
-        pnlTable.setBorder(BorderFactory.createEmptyBorder(0,20, 0, 20));
+        pnlTable.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
         pnlTable.setOpaque(false);
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
@@ -104,7 +109,7 @@ public class DashboardPanel extends JPanel {
 
         JScrollPane tableScrollPane = new JScrollPane(table);
         tableScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
- 
+
         pnlTable.add(new JScrollPane(tableScrollPane), BorderLayout.CENTER);
 
         // achievements panel
@@ -114,12 +119,26 @@ public class DashboardPanel extends JPanel {
         lblAchievementHeading.setFont(new Font("SansSerif", Font.BOLD, 16));
         pnlAchievements.add(lblAchievementHeading);
 
+        ArrayList<Achievement> achievements = achievementDB.getUserAchievements(loggedInUser.getUser_id());
+
+        boolean hasEarnedAchievements = false;
+
         // badges panel
         pnlBadges = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnlBadges.setOpaque(false);
-        pnlBadges.add(createBadges("🏆 First Find"));
-        pnlBadges.add(createBadges("🏆 Good Samaritan"));
-        pnlBadges.add(createBadges("🏆 Campus Hero"));
+
+        for (Achievement achievement : achievements) {
+            if ("EARNED".equalsIgnoreCase(achievement.getStatus())) {
+                pnlBadges.add(createBadges(achievement.getAchievement_name()));
+                hasEarnedAchievements = true;
+            }
+        }
+
+        if (!hasEarnedAchievements) {
+            JLabel lblNoAchievements = new JLabel("No achievements earned yet.");
+            lblNoAchievements.setForeground(Color.GRAY);
+            pnlBadges.add(lblNoAchievements);
+        }
 
         // add to container panel
         pnlContainer.add(pnlHeader, gbc);

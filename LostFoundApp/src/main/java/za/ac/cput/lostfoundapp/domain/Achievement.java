@@ -18,6 +18,12 @@ public class Achievement {
         this.points = points;
     }
 
+    public Achievement(String achievement_name, String achievement_description, String status) {
+        this.achievement_name = achievement_name;
+        this.achievement_description = achievement_description;
+        this.status = status;
+    }
+
     public int getAchievement_id() {
         return achievement_id;
     }

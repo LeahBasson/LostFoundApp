@@ -2,12 +2,17 @@ package za.ac.cput.lostfoundapp.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import za.ac.cput.lostfoundapp.dao.UserDAO;
+import java.util.ArrayList;
+import za.ac.cput.lostfoundapp.dao.*;
 import za.ac.cput.lostfoundapp.domain.User;
 
 public class SignUpFrame extends JFrame {
+    
+    // object
+    private AchievementDAO achievementDB;
 
     public SignUpFrame() {
+        achievementDB = new AchievementDAO();
 
         setTitle("FindMyItem - Sign Up");
         setSize(500, 650);
@@ -282,6 +287,16 @@ public class SignUpFrame extends JFrame {
                             role, password);
 
                     userDAO.register(user);
+                    
+                    // Get the registered user from the database
+                    ArrayList<User> users = userDAO.selectUser(email);
+
+                    if (!users.isEmpty()) {
+                        // get the first user id in the arraylist. There will only be 1 so its at index 0.
+                        int userId = users.get(0).getUser_id(); 
+                        
+                        achievementDB.addAchievement(userId); // added method  
+                    }
 
                     JOptionPane.showMessageDialog(
                             this,

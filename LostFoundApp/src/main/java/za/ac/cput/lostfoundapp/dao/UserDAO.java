@@ -130,7 +130,6 @@ public class UserDAO {
                         email, student_staff_number, role, password_hash
                 );
 
-                user.setPassword_hash(password_hash);
                 users.add(user);
             }
 
@@ -157,6 +156,57 @@ public class UserDAO {
 
     }
 
+    public boolean checkUser(String studStaffNum) {
+
+        boolean found = false;
+
+        try {
+            pstmt = con.prepareStatement(
+                    "SELECT * FROM Users WHERE student_staff_number = ?"
+            );
+
+            pstmt.setString(1, studStaffNum);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                found = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return found;
+    }
+
+    public boolean isSamePassword(String studStaffNum, String newPassword) {
+
+        try {
+            pstmt = con.prepareStatement(
+                    "SELECT password_hash FROM Users WHERE student_staff_number = ?"
+            );
+
+            pstmt.setString(1, studStaffNum);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+
+                String oldPassword = rs.getString("password_hash");
+
+                if (oldPassword.equals(newPassword)) {
+                    return true;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public void updatePassword(String student_staff_number, String password_hash) {
         try {
             pstmt = this.con.prepareStatement("UPDATE Users SET password_hash = ?"
@@ -164,6 +214,21 @@ public class UserDAO {
 
             pstmt.setString(1, password_hash);
             pstmt.setString(2, student_staff_number);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException err) {
+            System.out.println("ERROR: " + err);
+        }
+
+    }
+
+    public void deleteUser(int userId) {
+        try {
+            pstmt = this.con.prepareStatement("DELETE FROM Users"
+                    + " WHERE user_id = ?");
+
+            pstmt.setInt(1, userId);
 
             pstmt.executeUpdate();
 

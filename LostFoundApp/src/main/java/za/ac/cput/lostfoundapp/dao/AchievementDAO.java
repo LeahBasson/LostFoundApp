@@ -3,6 +3,8 @@ package za.ac.cput.lostfoundapp.dao;
 import java.sql.*;
 import javax.swing.JOptionPane;
 import za.ac.cput.lostfoundapp.connection.DBConnection;
+import java.util.*;
+import za.ac.cput.lostfoundapp.domain.*;
 
 public class AchievementDAO {
 
@@ -20,7 +22,7 @@ public class AchievementDAO {
     public void addAchievement(int userId) {
         try {
             pstmt = this.con.prepareStatement("INSERT INTO Achievement (user_id, achievement_name, "
-                    + "achievement_description, points)" + "VALUES (?, ?, ?, ?)");
+                    + "achievement_description, points)" + " VALUES (?, ?, ?, ?)");
 
             // First achievement
             pstmt.setInt(1, userId);
@@ -67,6 +69,35 @@ public class AchievementDAO {
         } catch (SQLException err) {
             System.out.println("ERROR: " + err);
         }
+    }
+
+    public ArrayList<Achievement> getUserAchievements(int userId) {
+        ArrayList<Achievement> achievements = new ArrayList<>();
+
+        try {
+            pstmt = this.con.prepareStatement("SELECT achievement_name, achievement_description, status"
+                    + " FROM Achievement WHERE user_id = ?");
+
+            pstmt.setInt(1, userId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) { // go through every row, then when there is no more rows the loop ends
+                String name = rs.getString("achievement_name");
+                String description = rs.getString("achievement_description");
+                String status = rs.getString("status");
+
+                Achievement achievement = new Achievement(name, description, status);
+                achievements.add(achievement);
+
+            }
+
+        } catch (SQLException err) {
+            System.out.println("ERROR: " + err);
+        }
+
+        return achievements;
+
     }
 
     public void checkFirstFind(int userId) {
@@ -252,6 +283,21 @@ public class AchievementDAO {
         }
 
         return count;
+    }
+    
+    public void deleteAchievement(int achievementId) {
+        try {
+            pstmt = this.con.prepareStatement("DELETE FROM Achievement"
+                    + " WHERE achievement_id = ?");
+
+            pstmt.setInt(1, achievementId);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException err) {
+            System.out.println("ERROR: " + err);
+        }
+
     }
 
 }// end of class

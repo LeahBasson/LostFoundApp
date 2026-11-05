@@ -1,11 +1,13 @@
 package za.ac.cput.lostfoundapp.gui;
 
-import za.ac.cput.lostfoundapp.gui.EditProfileDialog;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
+import za.ac.cput.lostfoundapp.dao.AchievementDAO;
+import za.ac.cput.lostfoundapp.domain.Achievement;
 import za.ac.cput.lostfoundapp.domain.User;
 
 public class ProfilePanel extends JPanel implements ActionListener {
@@ -21,17 +23,13 @@ public class ProfilePanel extends JPanel implements ActionListener {
     private JPanel pnlAccInfo;
     private JPanel pnlEdit;
     private JPanel pnlAchievementHeader;
-    private JPanel pnlEarnedAchievements;
-    private JPanel pnlLockedAchievements;
+    private JPanel pnlAchievements;
 
     // labels
     private JLabel lblTitle;
     private JLabel lblSub;
     private JLabel lblOverviewName;
     private JLabel lblSummary;
-    private JLabel lblOverviewBadge1;
-    private JLabel lblOverviewBadge2;
-    private JLabel lblOverviewBadge3;
     private JLabel lblAccInfo;
     private JLabel lblAchievementHeader;
 
@@ -44,9 +42,11 @@ public class ProfilePanel extends JPanel implements ActionListener {
 
     // object
     private User loggedInUser;
+    private AchievementDAO achievementDB;
 
     public ProfilePanel(User loggedInUser) {
         this.loggedInUser = loggedInUser;
+        achievementDB = new AchievementDAO();
 
         setLayout(new BorderLayout());
 
@@ -89,14 +89,6 @@ public class ProfilePanel extends JPanel implements ActionListener {
         pnlOverviewBadges.setAlignmentX(Component.LEFT_ALIGNMENT);
         pnlOverviewBadges.setOpaque(false); // Keeps the parent's dark blue background
 
-        // stats panel
-        pnlStats = new JPanel();
-        pnlStats.setLayout(new GridLayout(1, 4, 15, 0));
-        JPanel card1 = createStatCard("📈", "5", "Items Found");
-        JPanel card2 = createStatCard("🏆", "3", "Items Returned");
-        JPanel card3 = createStatCard("⭐", "850", "Total Points");
-        JPanel card4 = createStatCard("🏅", "3", "Achievements");
-
         // acc info header panel
         pnlAccInfoHeader = new JPanel();
         pnlAccInfoHeader.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -113,18 +105,39 @@ public class ProfilePanel extends JPanel implements ActionListener {
         pnlAchievementHeader.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         // earned achievements panel
-        pnlEarnedAchievements = new JPanel();
-        pnlEarnedAchievements.setLayout(new GridLayout(1, 4, 15, 0));
-        JPanel FirstFind = createAchievementCard("🎯 First Find", "Reported your first found item", "✔ ️Earned");
-        JPanel GoodSamaritan = createAchievementCard("❤️ Good Samaritan", "Helped 3 people recover their items", "✔ Earned");
-        JPanel CampusHero = createAchievementCard("🎖️ Campus Hero", "Found and returned 5 items", "✔ Earned");
+        pnlAchievements = new JPanel();
+        pnlAchievements = new JPanel(new GridLayout(0, 3, 15, 15));
 
-        // locked achievements panel
-        pnlLockedAchievements = new JPanel();
-        pnlLockedAchievements.setLayout(new GridLayout(1, 4, 15, 0));
-        JPanel CommunityBuilder = createAchievementCard("🏗️ Community Builder", "Earned 1000 points", "🔒 Locked");
-        JPanel GuardianAngel = createAchievementCard("😇️ Guardian Angel", "Returned 10 high-priority items", "🔒 Locked");
-        JPanel Legend = createAchievementCard("⭐️ Legend", "Earned 5000 points", "🔒 Locked");
+        ArrayList<Achievement> achievements = achievementDB.getUserAchievements(loggedInUser.getUser_id());
+
+        int earned_count = 0;
+        // to display earned cards first.
+        for (Achievement achievement : achievements) {
+            if ("EARNED".equalsIgnoreCase(achievement.getStatus())) {
+                pnlAchievements.add(createAchievementCard(achievement.getAchievement_name(), achievement.getAchievement_description(), achievement.getStatus()));
+                pnlOverviewBadges.add(createOverviewBadge(achievement.getAchievement_name()));
+                earned_count++;
+            }
+
+        }
+
+        // locked cards
+        for (Achievement achievement : achievements) {
+            if (!"EARNED".equalsIgnoreCase(achievement.getStatus())) {
+                pnlAchievements.add(createAchievementCard(achievement.getAchievement_name(), achievement.getAchievement_description(), achievement.getStatus()));
+            }
+        }
+
+        // stats panel
+        pnlStats = new JPanel();
+        pnlStats.setLayout(new GridLayout(1, 4, 15, 0));
+        
+        String points = Integer.toString(achievementDB.getTotalPoints(loggedInUser.getUser_id()));
+        
+        JPanel card1 = createStatCard("📈", "5", "Items Found");
+        JPanel card2 = createStatCard("🏆", "3", "Items Returned");
+        JPanel card3 = createStatCard("⭐",points , "Total Points");
+        JPanel card4 = createStatCard("🏅", Integer.toString(earned_count), "Achievements");
 
         // labels
         lblTitle = new JLabel("My Profile");
@@ -134,33 +147,13 @@ public class ProfilePanel extends JPanel implements ActionListener {
         lblOverviewName = new JLabel(loggedInUser.getFull_name());
         lblOverviewName.setFont(new Font("SansSerif", Font.BOLD, 18));
         lblOverviewName.setForeground(Color.WHITE);
-        lblSummary = new JLabel(loggedInUser.getRole() + " • " + loggedInUser.getCampus() + "•  850 Points");
+        lblSummary = new JLabel(loggedInUser.getRole() + " • " + loggedInUser.getCampus() + " • " + points + " points");
         lblSummary.setForeground(Color.WHITE);
         lblOverviewName.setAlignmentX(Component.LEFT_ALIGNMENT);
         lblSummary.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         lblAccInfo = new JLabel("Account Information");
         lblAccInfo.setFont(new Font("SansSerif", Font.BOLD, 16));
-
-        Border padding = BorderFactory.createEmptyBorder(10, 20, 10, 20);
-
-        lblOverviewBadge1 = new JLabel("🏆 First Find");
-        lblOverviewBadge1.setForeground(Color.WHITE);
-        lblOverviewBadge1.setOpaque(true);
-        lblOverviewBadge1.setBackground(new Color(31, 48, 86));
-        lblOverviewBadge1.setBorder(padding);
-
-        lblOverviewBadge2 = new JLabel("🏆 Good Samaritan");
-        lblOverviewBadge2.setForeground(Color.WHITE);
-        lblOverviewBadge2.setOpaque(true);
-        lblOverviewBadge2.setBackground(new Color(31, 48, 86));
-        lblOverviewBadge2.setBorder(padding);
-
-        lblOverviewBadge3 = new JLabel("🏆 Campus Hero");
-        lblOverviewBadge3.setForeground(Color.WHITE);
-        lblOverviewBadge3.setOpaque(true);
-        lblOverviewBadge3.setBackground(new Color(31, 48, 86));
-        lblOverviewBadge3.setBorder(padding);
 
         lblAchievementHeader = new JLabel("Achievements & Badges");
         lblAchievementHeader.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -184,9 +177,6 @@ public class ProfilePanel extends JPanel implements ActionListener {
         pnlOverview.add(lblOverviewName);
         pnlOverview.add(Box.createVerticalStrut(5));
         pnlOverview.add(lblSummary);
-        pnlOverviewBadges.add(lblOverviewBadge1);
-        pnlOverviewBadges.add(lblOverviewBadge2);
-        pnlOverviewBadges.add(lblOverviewBadge3);
         pnlOverview.add(Box.createVerticalStrut(10));
         pnlOverview.add(pnlOverviewBadges);
 
@@ -202,14 +192,6 @@ public class ProfilePanel extends JPanel implements ActionListener {
         pnlEdit.add(btnEdit);
 
         pnlAchievementHeader.add(lblAchievementHeader);
-
-        pnlEarnedAchievements.add(FirstFind);
-        pnlEarnedAchievements.add(GoodSamaritan);
-        pnlEarnedAchievements.add(CampusHero);
-
-        pnlLockedAchievements.add(CommunityBuilder);
-        pnlLockedAchievements.add(GuardianAngel);
-        pnlLockedAchievements.add(Legend);
 
         // add to container
         pnlContainer.add(pnlHeader, gbc);
@@ -239,11 +221,7 @@ public class ProfilePanel extends JPanel implements ActionListener {
 
         gbc.gridy = 7;
         gbc.insets = new Insets(18, 0, 0, 0);
-        pnlContainer.add(pnlEarnedAchievements, gbc);
-
-        gbc.gridy = 8;
-        gbc.insets = new Insets(18, 0, 0, 0);
-        pnlContainer.add(pnlLockedAchievements, gbc);
+        pnlContainer.add(pnlAchievements, gbc);
 
         pnlWrapper.add(pnlContainer, BorderLayout.NORTH);
 
@@ -315,9 +293,9 @@ public class ProfilePanel extends JPanel implements ActionListener {
 
         // 3. Status Label
         JLabel lblStatus = new JLabel(status);
-        lblDesc.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        lblDesc.setForeground(Color.GRAY);
-        lblDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblStatus.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        lblStatus.setForeground(Color.GRAY);
+        lblStatus.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Assemble the card with spacing gaps
         card.add(lblAchievement);
@@ -327,6 +305,15 @@ public class ProfilePanel extends JPanel implements ActionListener {
         card.add(lblStatus);
 
         return card;
+    }
+
+    private JLabel createOverviewBadge(String text) {
+        JLabel badge = new JLabel(text);
+        badge.setForeground(Color.WHITE);
+        badge.setOpaque(true);
+        badge.setBackground(new Color(31, 48, 86));
+        badge.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        return badge;
     }
 
     public void setGui() {
