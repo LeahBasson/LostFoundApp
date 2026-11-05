@@ -1,32 +1,49 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package za.ac.cput.lostfoundapp.gui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import javax.swing.*;
 
-/**
- *
- * @author LiewellenBaartman
- */
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+
+import za.ac.cput.lostfoundapp.dao.NotificationDAO;
+
 public class NotificationPanel extends JPanel {
 
     public static class NotificationItem {
 
+        private final int id;
         private final String title;
         private final String message;
         private final String timestamp;
         private boolean isRead;
 
-        public NotificationItem(String title, String message, String timestamp) {
+        public NotificationItem(int id, String title,
+                String message, String timestamp, boolean isRead) {
+
+            this.id = id;
             this.title = title;
             this.message = message;
             this.timestamp = timestamp;
-            this.isRead = false;
+            this.isRead = isRead;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public String getTitle() {
@@ -46,54 +63,228 @@ public class NotificationPanel extends JPanel {
         }
 
         public void setRead(boolean read) {
-            this.isRead = read;
+            isRead = read;
         }
     }
 
-    private DefaultListModel<NotificationItem> listModel;
-    private JList<NotificationItem> notificationList;
+    private final DefaultListModel<NotificationItem> listModel =
+            new DefaultListModel<>();
 
-    public NotificationPanel() {
-        setLayout(new BorderLayout());
-        setBackground(new Color(248, 250, 252));
+    private final JList<NotificationItem> notificationList =
+            new JList<>(listModel);
 
-        JLabel headerLabel = new JLabel("Notifications");
-        headerLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
-        headerLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
-        add(headerLabel, BorderLayout.NORTH);
+    private final NotificationDAO notificationDAO =
+            new NotificationDAO();
 
-        listModel = new DefaultListModel<>();
-        listModel.addElement(new NotificationItem("Potential Item Match!",
-                "A Black HP Laptop matching your report was reported found at Library.",
-                LocalDateTime.now().minusHours(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
+    private final String loggedInUserId;
 
-        listModel.addElement(new NotificationItem("Claim Status Update",
-                "Your claim for 'Student Card - T Molefe' has been approved by Admin.",
-                LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
+    public NotificationPanel(String loggedInUserId) {
 
-        notificationList = new JList<>(listModel);
-        notificationList.setCellRenderer((ListCellRenderer<? super NotificationItem>) new NotificationListCellRenderer());
-        notificationList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        notificationList.setFixedCellHeight(75);
+        this.loggedInUserId = loggedInUserId;
 
-        
-        notificationList.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                NotificationItem selected = notificationList.getSelectedValue();
-                if (selected != null && !selected.isRead()) {
+        setLayout(new BorderLayout(10, 10));
+        setBackground(Color.WHITE);
+
+        JPanel header = new JPanel(new BorderLayout());
+        header.setBackground(Color.WHITE);
+
+        JLabel title = new JLabel("Notifications");
+        header.add(title, BorderLayout.WEST);
+
+        JPanel actions = new JPanel(
+                new FlowLayout(FlowLayout.RIGHT));
+
+        actions.setBackground(Color.WHITE);
+
+        JButton btnAdd =
+                new JButton("Send Test Notification");
+
+        JButton btnDelete =
+                new JButton("Delete Selected");
+
+        actions.add(btnAdd);
+        actions.add(btnDelete);
+
+        header.add(actions, BorderLayout.EAST);
+        add(header, BorderLayout.NORTH);
+
+        notificationList.setCellRenderer(
+                new NotificationListCellRenderer());
+
+        notificationList.addListSelectionListener(event -> {
+
+            if (event.getValueIsAdjusting()) {
+                return;
+            }
+
+            NotificationItem selected =
+                    notificationList.getSelectedValue();
+
+            if (selected != null && !selected.isRead()) {
+
+                boolean updated = notificationDAO.markAsRead(
+                        selected.getId(), loggedInUserId);
+
+                if (updated) {
                     selected.setRead(true);
                     notificationList.repaint();
                 }
             }
         });
 
-        JScrollPane scrollPane = new JScrollPane(notificationList);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
-        add(scrollPane, BorderLayout.CENTER);
+        JScrollPane scroll =
+                new JScrollPane(notificationList);
+
+        scroll.setBorder(
+                BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        add(scroll, BorderLayout.CENTER);
+
+        btnAdd.addActionListener(
+                event -> addTestNotification());
+
+        btnDelete.addActionListener(
+                event -> deleteSelectedNotification());
+
+        loadNotificationsFromDB();
     }
 
-    public void addNotification(String title, String message) {
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-        listModel.add(0, new NotificationItem(title, message, now));
+    // READ
+    private void loadNotificationsFromDB() {
+
+        listModel.clear();
+
+        for (NotificationItem item :
+                notificationDAO.getNotifications(loggedInUserId)) {
+
+            listModel.addElement(item);
+        }
+    }
+
+    // CREATE
+    private void addTestNotification() {
+
+        String timestamp = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        boolean added = notificationDAO.addNotification(
+                loggedInUserId,
+                "New Item Alert",
+                "A new item matching your search was reported!",
+                timestamp
+        );
+
+        if (added) {
+
+            loadNotificationsFromDB();
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Notification inserted into Database!");
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Could not insert notification.");
+        }
+    }
+
+    // DELETE
+    private void deleteSelectedNotification() {
+
+        NotificationItem selected =
+                notificationList.getSelectedValue();
+
+        if (selected == null) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a notification to delete.");
+
+            return;
+        }
+
+        boolean deleted = notificationDAO.deleteNotification(
+                selected.getId(), loggedInUserId);
+
+        if (deleted) {
+
+            loadNotificationsFromDB();
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Notification deleted from Database!");
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Could not delete notification.");
+        }
+    }
+
+    private static class NotificationListCellRenderer
+            extends DefaultListCellRenderer {
+
+        @Override
+        public Component getListCellRendererComponent(
+                JList<?> list,
+                Object value,
+                int index,
+                boolean selected,
+                boolean focused) {
+
+            JLabel label = (JLabel)
+                    super.getListCellRendererComponent(
+                            list, value, index, selected, focused);
+
+            if (value instanceof NotificationItem) {
+
+                NotificationItem item = (NotificationItem) value;
+
+                label.setText(
+                        "<html><b>" + escape(item.getTitle()) + "</b>"
+                        + (item.isRead() ? "" : " - (Unread)")
+                        + "<br>" + escape(item.getMessage())
+                        + "<br><small>"
+                        + escape(item.getTimestamp())
+                        + "</small></html>"
+                );
+            }
+
+            return label;
+        }
+
+        private static String escape(String text) {
+
+            if (text == null) {
+                return "";
+            }
+
+            return text.replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;");
+        }
+    }
+
+    // Run independently for testing
+    public static void main(String[] args) {
+
+        SwingUtilities.invokeLater(() -> {
+
+            JFrame frame =
+                    new JFrame("FindMyItem - Notifications");
+
+            frame.setDefaultCloseOperation(
+                    JFrame.EXIT_ON_CLOSE);
+
+            frame.setContentPane(
+                    new NotificationPanel("DEMO_USER"));
+
+            frame.setSize(750, 450);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 }
