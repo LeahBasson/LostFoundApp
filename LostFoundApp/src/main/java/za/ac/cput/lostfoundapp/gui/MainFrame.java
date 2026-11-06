@@ -67,6 +67,7 @@ public class MainFrame extends JFrame {
         contentPanel.add(new ProfilePanel(loggedInUser), "Profile");
 
         btnDashboard.addActionListener(e -> cardLayout.show(contentPanel, "Dashboard"));
+        btnNotifications.addActionListener(e -> cardLayout.show(contentPanel, "Notifications"));
         btnReportLost.addActionListener(e -> cardLayout.show(contentPanel, "Report Lost Item"));
         btnReportFound.addActionListener(e -> cardLayout.show(contentPanel, "Report Found Item"));
         btnMyItems.addActionListener(e -> cardLayout.show(contentPanel, "My Items"));
