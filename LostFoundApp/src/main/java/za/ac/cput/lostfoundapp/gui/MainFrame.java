@@ -36,6 +36,7 @@ public class MainFrame extends JFrame {
         userLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 10));
 
         JButton btnDashboard = createNavButton("Dashboard");
+        JButton btnNotifications = createNavButton("Notifications");
         JButton btnReportLost = createNavButton("Report Lost Item");
         JButton btnReportFound = createNavButton("Report Found Item");
         JButton btnMyItems = createNavButton("My Items");
@@ -46,6 +47,7 @@ public class MainFrame extends JFrame {
         sidebar.add(logo);
         sidebar.add(userLabel);
         sidebar.add(btnDashboard);
+        sidebar.add(btnNotifications);
         sidebar.add(btnReportLost);
         sidebar.add(btnReportFound);
         sidebar.add(btnMyItems);
@@ -56,6 +58,7 @@ public class MainFrame extends JFrame {
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
         contentPanel.add(new DashboardPanel(loggedInUser), "Dashboard");
+        contentPanel.add(new NotificationPanel(loggedInUser.getStudent_staff_number()), "Notifications");
         contentPanel.add(new ReportItemPanel("LOST"), "Report Lost Item");
         contentPanel.add(new ReportItemPanel("FOUND"), "Report Found Item");
         contentPanel.add(new MyItemsPanel(loggedInUser.getUser_id()), "My Items");
