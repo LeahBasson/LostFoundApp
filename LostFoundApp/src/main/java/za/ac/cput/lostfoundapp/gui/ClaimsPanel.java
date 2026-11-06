@@ -17,7 +17,7 @@ import za.ac.cput.lostfoundapp.domain.User;
 
 public class ClaimsPanel extends JPanel {
 
-    // same colours used across the rest of the app
+    
     private static final Color BG = new Color(248, 250, 252);
     private static final Color BLUE = new Color(37, 99, 235);
     private static final Color BORDER = new Color(226, 232, 240);
@@ -85,7 +85,7 @@ public class ClaimsPanel extends JPanel {
         gbc.insets = new Insets(0, 0, 0, 0);
         pnlContainer.add(buildDeleteSection(), gbc);
 
-        // wrapper keeps every section at its own preferred height
+        
         JPanel pnlWrapper = new JPanel(new BorderLayout());
         pnlWrapper.setBackground(BG);
         pnlWrapper.add(pnlContainer, BorderLayout.NORTH);
@@ -101,7 +101,7 @@ public class ClaimsPanel extends JPanel {
         reloadTable(-1);
     }
 
-    // ---------------------------------------------------------------- ADD
+    
     private JPanel buildAddSection() {
         JPanel card = sectionCard("Add claim", "(ClaimDAO.addClaim)", "Submit a claim on a found item");
 
@@ -184,7 +184,7 @@ public class ClaimsPanel extends JPanel {
         }
     }
 
-    // ----------------------------------------------------------- RETRIEVE
+    
     private JPanel buildRetrieveSection() {
         JPanel card = sectionCard("Retrieve claims", "(ClaimDAO.getAllClaims)",
                 "All claims loaded from the CLAIMS table");
@@ -207,7 +207,7 @@ public class ClaimsPanel extends JPanel {
         table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
         table.getTableHeader().setReorderingAllowed(false);
 
-        // claimant column is bold, status column is a coloured pill
+        
         table.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable t, Object v, boolean sel,
@@ -260,7 +260,7 @@ public class ClaimsPanel extends JPanel {
         }
 
         if (rowToSelect == -1 && !claims.isEmpty() && selectClaimId == -1) {
-            rowToSelect = 0; // select the first claim like the screenshots
+            rowToSelect = 0; 
         }
 
         if (rowToSelect >= 0) {
@@ -271,7 +271,7 @@ public class ClaimsPanel extends JPanel {
         refreshSelection();
     }
 
-    // updates the update + delete sections to follow the selected table row
+    
     private void refreshSelection() {
         int row = table.getSelectedRow();
 
@@ -302,7 +302,7 @@ public class ClaimsPanel extends JPanel {
         btnDelete.setEnabled(true);
     }
 
-    // ------------------------------------------------------------- UPDATE
+    
     private JPanel buildUpdateSection() {
         JPanel card = sectionCard("Update claim status", "(ClaimDAO.updateClaimStatus)", null);
 
@@ -375,7 +375,7 @@ public class ClaimsPanel extends JPanel {
         }
     }
 
-    // ------------------------------------------------------------- DELETE
+    
     private JPanel buildDeleteSection() {
         JPanel card = sectionCard("Delete claim", "(ClaimDAO.deleteClaim)", null);
 
@@ -409,7 +409,7 @@ public class ClaimsPanel extends JPanel {
         buttons.add(btnDelete);
         buttons.add(btnCancel);
 
-        // red warning box
+       
         JPanel warningBox = new JPanel();
         warningBox.setLayout(new BoxLayout(warningBox, BoxLayout.Y_AXIS));
         warningBox.setBackground(new Color(254, 226, 226));
@@ -445,15 +445,15 @@ public class ClaimsPanel extends JPanel {
         Claim c = claims.get(row);
 
         if (claimDAO.deleteClaim(c.getClaimId())) {
-            reloadTable(-2); // -2 = reload without auto-selecting a row
+            reloadTable(-2); 
             showResult(lblDeleteResult, "1 claim(s) deleted.", true);
         } else {
             showResult(lblDeleteResult, "0 claim(s) deleted.", false);
         }
     }
 
-    // ------------------------------------------------------------ HELPERS
-    // white card with a border, same look as the cards on the Dashboard
+    
+    
     private JPanel sectionCard(String title, String daoRef, String subtitle) {
         JPanel card = new JPanel(new BorderLayout(0, 12));
         card.setBackground(Color.WHITE);
@@ -497,7 +497,7 @@ public class ClaimsPanel extends JPanel {
         return p;
     }
 
-    // stretches a component across the card and keeps it left aligned in a BoxLayout
+    
     private JComponent left(JComponent c) {
         c.setAlignmentX(Component.LEFT_ALIGNMENT);
         if (!(c instanceof JLabel)) {
@@ -526,7 +526,7 @@ public class ClaimsPanel extends JPanel {
         label.setText(text);
     }
 
-    // coloured status pill used in the table
+    
     private class StatusRenderer extends DefaultTableCellRenderer {
 
         @Override
@@ -558,4 +558,4 @@ public class ClaimsPanel extends JPanel {
         }
     }
 
-} // end of class
+} 
