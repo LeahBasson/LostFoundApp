@@ -1,4 +1,3 @@
-
 package za.ac.cput.lostfoundapp.gui;
 
 import java.awt.BorderLayout;
@@ -67,14 +66,14 @@ public class NotificationPanel extends JPanel {
         }
     }
 
-    private final DefaultListModel<NotificationItem> listModel =
-            new DefaultListModel<>();
+    private final DefaultListModel<NotificationItem> listModel
+            = new DefaultListModel<>();
 
-    private final JList<NotificationItem> notificationList =
-            new JList<>(listModel);
+    private final JList<NotificationItem> notificationList
+            = new JList<>(listModel);
 
-    private final NotificationDAO notificationDAO =
-            new NotificationDAO();
+    private final NotificationDAO notificationDAO
+            = new NotificationDAO();
 
     private final String loggedInUserId;
 
@@ -96,11 +95,11 @@ public class NotificationPanel extends JPanel {
 
         actions.setBackground(Color.WHITE);
 
-        JButton btnAdd =
-                new JButton("Send Test Notification");
+        JButton btnAdd
+                = new JButton("Send Test Notification");
 
-        JButton btnDelete =
-                new JButton("Delete Selected");
+        JButton btnDelete
+                = new JButton("Delete Selected");
 
         actions.add(btnAdd);
         actions.add(btnDelete);
@@ -117,23 +116,38 @@ public class NotificationPanel extends JPanel {
                 return;
             }
 
-            NotificationItem selected =
-                    notificationList.getSelectedValue();
+            NotificationItem selected
+                    = notificationList.getSelectedValue();
 
-            if (selected != null && !selected.isRead()) {
+            if (selected == null) {
+                return;
+            }
+
+            // Mark notification as read
+            if (!selected.isRead()) {
 
                 boolean updated = notificationDAO.markAsRead(
-                        selected.getId(), loggedInUserId);
+                        selected.getId(),
+                        loggedInUserId
+                );
 
                 if (updated) {
                     selected.setRead(true);
                     notificationList.repaint();
                 }
             }
+
+            // Display full notification
+            JOptionPane.showMessageDialog(
+                    this,
+                    selected.getMessage(),
+                    selected.getTitle(),
+                    JOptionPane.INFORMATION_MESSAGE
+            );
         });
 
-        JScrollPane scroll =
-                new JScrollPane(notificationList);
+        JScrollPane scroll
+                = new JScrollPane(notificationList);
 
         scroll.setBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -154,8 +168,8 @@ public class NotificationPanel extends JPanel {
 
         listModel.clear();
 
-        for (NotificationItem item :
-                notificationDAO.getNotifications(loggedInUserId)) {
+        for (NotificationItem item
+                : notificationDAO.getNotifications(loggedInUserId)) {
 
             listModel.addElement(item);
         }
@@ -193,8 +207,8 @@ public class NotificationPanel extends JPanel {
     // DELETE
     private void deleteSelectedNotification() {
 
-        NotificationItem selected =
-                notificationList.getSelectedValue();
+        NotificationItem selected
+                = notificationList.getSelectedValue();
 
         if (selected == null) {
 
@@ -235,9 +249,8 @@ public class NotificationPanel extends JPanel {
                 boolean selected,
                 boolean focused) {
 
-            JLabel label = (JLabel)
-                    super.getListCellRendererComponent(
-                            list, value, index, selected, focused);
+            JLabel label = (JLabel) super.getListCellRendererComponent(
+                    list, value, index, selected, focused);
 
             if (value instanceof NotificationItem) {
 
@@ -273,8 +286,8 @@ public class NotificationPanel extends JPanel {
 
         SwingUtilities.invokeLater(() -> {
 
-            JFrame frame =
-                    new JFrame("FindMyItem - Notifications");
+            JFrame frame
+                    = new JFrame("FindMyItem - Notifications");
 
             frame.setDefaultCloseOperation(
                     JFrame.EXIT_ON_CLOSE);
