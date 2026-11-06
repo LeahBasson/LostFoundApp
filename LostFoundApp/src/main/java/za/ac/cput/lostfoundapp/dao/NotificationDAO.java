@@ -13,8 +13,8 @@ public class NotificationDAO {
 
     private static final String URL
             = "jdbc:derby://localhost:1527/University";
-    private static final String USER = "administrator";
-    private static final String PASSWORD = "admin";
+    private static final String USER = "app";
+    private static final String PASSWORD = "app";
 
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
