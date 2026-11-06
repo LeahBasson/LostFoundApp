@@ -4,10 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import za.ac.cput.lostfoundapp.domain.User;
 
-/**
- * Runs the My Claims module inside the exact same frame set-up as MainFrame
- * (same size, sidebar, colours and nav buttons) without editing MainFrame.
- */
+
 public class ClaimsFrame extends JFrame {
 
     private static final Color SIDEBAR = new Color(15, 23, 42);
@@ -71,7 +68,7 @@ public class ClaimsFrame extends JFrame {
         add(sidebar, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
 
-        select(4, "My Claims"); // open on My Claims
+        select(4, "My Claims"); 
     }
 
     private void select(int index, String panelName) {
@@ -81,7 +78,7 @@ public class ClaimsFrame extends JFrame {
         cardLayout.show(contentPanel, panelName);
     }
 
-    // identical to MainFrame.createNavButton
+    
     private JButton createNavButton(String text) {
         JButton b = new JButton(text);
         b.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -95,7 +92,7 @@ public class ClaimsFrame extends JFrame {
         return b;
     }
 
-    // run just this module (no login needed); the user_id must exist in the Users table
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             User demo = new User(1, "Thabo Molefe", "0821234567", "Bellville", "English",
