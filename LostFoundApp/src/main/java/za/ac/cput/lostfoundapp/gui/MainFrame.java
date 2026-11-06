@@ -58,7 +58,7 @@ public class MainFrame extends JFrame {
         contentPanel.add(new DashboardPanel(loggedInUser), "Dashboard");
         contentPanel.add(new ReportItemPanel("LOST"), "Report Lost Item");
         contentPanel.add(new ReportItemPanel("FOUND"), "Report Found Item");
-        contentPanel.add(new MyItemsPanel(), "My Items");
+        contentPanel.add(new MyItemsPanel(loggedInUser.getUser_id()), "My Items");
         contentPanel.add(new ClaimsPanel(loggedInUser), "My Claims");
         contentPanel.add(new SimplePanel("Messages Module - Secure chat"), "Messages");
         contentPanel.add(new ProfilePanel(loggedInUser), "Profile");
